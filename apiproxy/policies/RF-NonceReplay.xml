@@ -1,0 +1,16 @@
+<RaiseFault name='RF-NonceReplay'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'>{
+  "error" : {
+    "code" : 403.01,
+    "message" : "nonce replay."
+  }
+}
+</Payload>
+      <StatusCode>403</StatusCode>
+      <ReasonPhrase>Forbidden</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

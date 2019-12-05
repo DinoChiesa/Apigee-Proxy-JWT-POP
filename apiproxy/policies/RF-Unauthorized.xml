@@ -1,0 +1,16 @@
+<RaiseFault name='RF-Unauthorized'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'>{
+  "error" : {
+    "code" : 401.01,
+    "message" : "pass an authorization header containing a POP token."
+  }
+}
+</Payload>
+      <StatusCode>401</StatusCode>
+      <ReasonPhrase>Unauthorized</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

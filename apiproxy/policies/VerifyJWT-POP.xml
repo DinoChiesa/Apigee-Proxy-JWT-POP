@@ -1,0 +1,9 @@
+<VerifyJWT name='VerifyJWT-POP'>
+  <Algorithm>RS256</Algorithm>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <PublicKey>
+    <JWKS ref='jwks'/>
+  </PublicKey>
+  <Issuer>urn://apigee-rfc7800-example-issuer</Issuer>
+  <Audience>urn://apigee-rfc7800-example-recipient</Audience>
+</VerifyJWT>

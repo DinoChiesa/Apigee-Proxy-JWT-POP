@@ -1,0 +1,6 @@
+<Javascript name='JS-GetJwks-POP' timeLimit='1200' >
+  <Properties>
+    <Property name='var_containing_uri'>issuer_jwks_uri</Property>
+  </Properties>
+  <ResourceURL>jsc://getJwks.js</ResourceURL>
+</Javascript>

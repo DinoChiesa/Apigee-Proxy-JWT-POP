@@ -1,0 +1,9 @@
+<AssignMessage name='AV-JWT-Recipient-Variables'>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+
+  <AssignVariable>
+    <Name>issuer_jwks_uri</Name>
+    <Template>{client.scheme}://{request.header.host}/jwt-pop/issuer/jwks.json</Template>
+  </AssignVariable>
+
+</AssignMessage>

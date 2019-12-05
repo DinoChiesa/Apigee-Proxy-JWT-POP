@@ -1,0 +1,16 @@
+<RaiseFault name='RF-InvalidNonceLifetime'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'>{
+  "error" : {
+    "code" : 403.02,
+    "message" : "invalid nonce lifetime."
+  }
+}
+</Payload>
+      <StatusCode>403</StatusCode>
+      <ReasonPhrase>Forbidden</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

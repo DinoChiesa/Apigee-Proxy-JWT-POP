@@ -1,0 +1,8 @@
+<VerifyJWT name='VerifyJWT-Nonce'>
+  <Algorithm>RS256</Algorithm>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <Source>request.header.nonce</Source>
+  <PublicKey>
+    <JWKS ref='jwks'/>
+  </PublicKey>
+</VerifyJWT>

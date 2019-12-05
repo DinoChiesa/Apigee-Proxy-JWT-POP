@@ -1,0 +1,3 @@
+<Javascript name='JS-ComputeNonceLifetime' timeLimit='200' >
+  <ResourceURL>jsc://computeNonceLifetime.js</ResourceURL>
+</Javascript>

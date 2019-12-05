@@ -1,0 +1,16 @@
+<RaiseFault name='RF-KidMismatch'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'>{
+  "error" : {
+    "code" : 403.03,
+    "message" : "mismatch in kid from POP and kid used in NONCE."
+  }
+}
+</Payload>
+      <StatusCode>403</StatusCode>
+      <ReasonPhrase>Forbidden</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

@@ -1,0 +1,9 @@
+<AssignMessage name='AM-POP-Response'>
+  <Set>
+    <Payload contentType='text/plain'>{generated-jwt}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo>response</AssignTo>
+</AssignMessage>

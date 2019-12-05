@@ -1,0 +1,9 @@
+<LookupCache name='CacheLookup-Nonce'>
+  <!--  <CacheResource>cache1</CacheResource> -->
+  <AssignTo>foundnonce</AssignTo> <!-- name of flow variable -->
+  <Scope>Proxy</Scope>
+  <CacheKey>
+    <Prefix>nonce</Prefix>
+    <KeyFragment ref='jwt.VerifyJWT-Nonce.decoded.claim.nonce' />
+  </CacheKey>
+</LookupCache>

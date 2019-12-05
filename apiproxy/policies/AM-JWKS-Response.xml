@@ -1,0 +1,9 @@
+<AssignMessage name='AM-JWKS-Response'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo>response</AssignTo>
+  <Set>
+    <Payload contentType='application/json'>{rsakey_jwks}</Payload>
+    <ReasonPhrase>OK</ReasonPhrase>
+    <StatusCode>200</StatusCode>
+  </Set>
+</AssignMessage>

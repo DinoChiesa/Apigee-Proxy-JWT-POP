@@ -1,0 +1,151 @@
+<ProxyEndpoint name="recipient-endpoint">
+  <Description>Endpoint simulating the recipient in a POP Token flow.</Description>
+  <HTTPProxyConnection>
+    <BasePath>/jwt-pop/recipient</BasePath>
+    <Properties/>
+    <VirtualHost>secure</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules/>
+
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>AV-JWT-Recipient-Variables</Name>
+      </Step>
+    </Request>
+    <Response>
+      <Step>
+        <Name>AM-CleanResponseHeaders</Name>
+      </Step>
+    </Response>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request>
+    </Request>
+    <Response>
+    </Response>
+  </PostFlow>
+  <PostClientFlow name="PostFlow1">
+    <Request>
+    </Request>
+    <Response>
+    </Response>
+  </PostClientFlow>
+
+  <Flows>
+
+    <Flow name="flow1">
+      <!--
+        example request format:
+
+        curl -i -X POST \
+          -H "Authorization: Bearer $POPJWT" \
+          -H "NONCE: $NONCE" \
+          https://$ORG-$ENV.apigee.net/jwt-pop/recipient/t1
+
+        Both the POPJWT and the NONCE are signed JWT.
+        The popJWT is signed by the issuer and contains a cnf
+        claim which specifies a jku. The NONCE is signed by
+        a private key, the public key companion of which is
+        specified in the jku and kid.
+      -->
+
+      <Request>
+        <Step>
+          <Name>RF-Unauthorized</Name>
+          <Condition>request.header.authorization = null</Condition>
+        </Step>
+
+        <!--
+            This is sort of a contrived step.  It retrieves the JWKS from the
+            issuer endpoint.  The recipient may hard-code the issuer JWKS
+            endpoint, in which case this retrievall step is not necessary.
+            Also we could cache this if it were not a fixed, well-known URI.
+        -->
+        <Step>
+          <Name>JS-GetJwks-POP</Name>
+        </Step>
+
+        <!-- verify that the issuer signed the POP token -->
+        <Step>
+          <Name>VerifyJWT-POP</Name>
+        </Step>
+
+        <!-- extract the jku and kid from the cnf claim in the pop token -->
+        <Step>
+          <Name>JS-Extract-jku-and-kid</Name>
+        </Step>
+
+        <Step>
+          <Name>RF-InvalidPOP</Name>
+          <Condition>pop_jku = null || pop_kid = null</Condition>
+        </Step>
+
+        <!-- retrieve the JWKS from the jku. We could cache this. -->
+        <Step>
+          <Name>JS-GetJwks-Nonce</Name>
+        </Step>
+
+        <!-- verify that the presenter signed the nonce JWT. -->
+        <Step>
+          <Name>VerifyJWT-Nonce</Name>
+        </Step>
+
+        <!-- verify that the kid asserted in the cnf is the kid used by the nonce JWT -->
+        <Step>
+          <Name>RF-KidMismatch</Name>
+          <Condition>jwt.VerifyJWT-Nonce.decoded.header.kid != pop_kid</Condition>
+        </Step>
+
+        <!-- verify that the Nonce JWT has a lifetime less than 300s -->
+        <Step>
+          <Name>JS-ComputeNonceLifetime</Name>
+        </Step>
+        <Step>
+          <Name>RF-InvalidNonceLifetime</Name>
+          <Condition>nonce_lifetime > 300</Condition>
+        </Step>
+
+        <!-- verify that the Nonce JWT contains a nonce claim -->
+        <Step>
+          <Name>RF-MissingNonce</Name>
+          <Condition>jwt.VerifyJWT-Nonce.decoded.claim.nonce = null</Condition>
+        </Step>
+
+        <!-- verify that this nonce value has not been presented previously -->
+        <Step>
+          <Name>CacheLookup-Nonce</Name>
+        </Step>
+        <Step>
+          <Name>RF-NonceReplay</Name>
+          <Condition>foundnonce != null</Condition>
+        </Step>
+        <Step>
+          <Name>CachePopulate-Nonce</Name>
+        </Step>
+      </Request>
+
+      <Response>
+        <Step>
+          <Name>AM-Verify-Response</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/t1") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name="unknown request">
+      <Request>
+        <Step>
+          <Name>RF-UnknownRequest</Name>
+        </Step>
+      </Request>
+      <Response>
+      </Response>
+    </Flow>
+
+  </Flows>
+
+  <RouteRule name="NoRouteRule"/>
+
+</ProxyEndpoint>

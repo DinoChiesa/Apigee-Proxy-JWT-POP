@@ -1,0 +1,12 @@
+<PopulateCache name='CachePopulate-Nonce'>
+  <!-- <CacheResource>cache1</CacheResource> -->
+  <Source>jwt.VerifyJWT-Nonce.decoded.claim.nonce</Source>
+  <Scope>Proxy</Scope>
+  <CacheKey>
+    <Prefix>nonce</Prefix>
+    <KeyFragment ref='jwt.VerifyJWT-Nonce.decoded.claim.nonce' />
+  </CacheKey>
+  <ExpirySettings>
+    <TimeoutInSec>300</TimeoutInSec>
+  </ExpirySettings>
+</PopulateCache>

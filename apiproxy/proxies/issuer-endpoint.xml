@@ -1,0 +1,89 @@
+<ProxyEndpoint name="issuer-endpoint">
+  <Description>POP Token Issuer Endpoint; issues tokens and publishes the JWKS</Description>
+  <HTTPProxyConnection>
+    <BasePath>/jwt-pop/issuer</BasePath>
+    <Properties/>
+    <VirtualHost>secure</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules/>
+
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>AV-JWT-Issuer-Variables</Name>
+      </Step>
+    </Request>
+    <Response>
+      <Step>
+        <Name>AM-CleanResponseHeaders</Name>
+      </Step>
+    </Response>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request>
+    </Request>
+    <Response>
+    </Response>
+  </PostFlow>
+  <PostClientFlow name="PostFlow">
+    <Request>
+    </Request>
+    <Response>
+    </Response>
+  </PostClientFlow>
+
+  <Flows>
+
+    <Flow name="flow1">
+      <!--
+        example request format:
+
+         curl -i -X POST -H content-type:application/json \
+           https://$ORG-$ENV.apigee.net/jwt-pop/issuer/poptoken \
+           -d '{ "jku": "url-pointing-to-JWKS", "kid": "key-id"}'
+      -->
+      <Request>
+        <Step>
+          <Name>RF-InvalidRequest</Name>
+          <Condition>request.header.content-type != "application/json"</Condition>
+        </Step>
+        <Step>
+          <Name>JS-ValidateConfirmation</Name>
+        </Step>
+        <Step>
+          <Name>GenerateJWT-1</Name>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>AM-POP-Response</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/poptoken") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name="flow2">
+      <Description>return JWKS </Description>
+      <Request/>
+      <Response>
+        <Step><Name>AM-JWKS-Response</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/jwks.json") and (request.verb = "GET")</Condition>
+    </Flow>
+
+    <Flow name="unknown request">
+      <Request>
+        <Step>
+          <Name>RF-UnknownRequest</Name>
+        </Step>
+      </Request>
+      <Response>
+      </Response>
+    </Flow>
+
+  </Flows>
+
+  <RouteRule name="NoRouteRule"/>
+
+</ProxyEndpoint>

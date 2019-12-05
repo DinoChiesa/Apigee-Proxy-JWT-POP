@@ -1,0 +1,6 @@
+<Javascript name='JS-GetJwks-Nonce' timeLimit='1200' >
+  <Properties>
+    <Property name='var_containing_uri'>pop_jku</Property>
+  </Properties>
+  <ResourceURL>jsc://getJwks.js</ResourceURL>
+</Javascript>

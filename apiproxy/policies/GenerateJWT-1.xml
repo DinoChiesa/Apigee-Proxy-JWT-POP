@@ -1,0 +1,47 @@
+<GenerateJWT name='GenerateJWT-1'>
+  <Algorithm>RS256</Algorithm>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <PrivateKey>
+    <Value ref="private.rsakey_privatepem"/>
+    <Id ref='rsakey_id'/>
+  </PrivateKey>
+
+  <!--
+      In a real system, the subject will be authenticated in some way.
+      Here, we just use whatever the presenter passed to us.
+  -->
+  <Subject ref='request.queryparam.sub'/>
+  <Issuer ref='issuer'/>
+  <Audience ref='audience'/>
+  <Id/>
+  <ExpiresIn>20m</ExpiresIn>
+  <AdditionalClaims>
+    <Claim name='purpose'>pop</Claim>
+    <Claim name='cnf' type='map' ref='pop_cnf'/>
+    <!-- per RFC7800 sec. 3, the cnf claim takes one of these forms:
+
+      form 1: full jwk
+      {
+        "jwk":{
+          "kty": "EC",
+          "use": "sig",
+          "crv": "P-256",
+          "x": "18wHLeIgW9wVN6VD1Txgpqy2LszYkMf6J8njVAibvhM",
+          "y": "-V4dS4UaLMgP_4fY4j8ir7cl1TXlFdAgcx55o7TkcSA"
+        }
+      }
+
+      form 2: just a kid
+      {
+        "kid":" key-id-here"
+      }
+
+      form 3: url with kid
+      {
+        "jku": "https://keys.example.net/pop-keys.json",
+        "kid": "2015-08-28"
+      }
+    -->
+  </AdditionalClaims>
+  <OutputVariable>generated-jwt</OutputVariable>
+</GenerateJWT>
