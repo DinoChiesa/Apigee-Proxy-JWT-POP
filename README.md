@@ -72,7 +72,8 @@ Then, follow these steps:
        -d '{ "jku": "url-pointing-to-JWKS", "kid": "key-id"}'
    ```
 
-   For demonstration purposes, we can use a demonstration JWKS and key. First,
+   For demonstration purposes, we can use [a demonstration
+   JWKS endpoint](https://jwks-service.appspot.com) that publishes its private keys. First,
    get the list of RSA keys:
 
    ```
@@ -83,13 +84,13 @@ Then, follow these steps:
    request:
 
    ```
-   keyid=ABCDEFG
+   keyid=REPLACE_THIS_WITH_ONE_OF_THE_RETURNED_KEY_IDS
    curl -i https://$ORG-$ENV.apigee.net/jwt-pop/issuer/poptoken?sub=Dino \
      -H content-type:application/json \
      -d '{ "jku" : "https://jwks-service.appspot.com/.well-known/jwks.json", "kid" : "'${keyid}'" }'
    ```
 
-   (The jwks-service.appspot.com is a demonstration service. Don't use it in production!)
+   *Please note:* The jwks-service.appspot.com is a demonstration service. Don't use it in production!
 
    The response from the /issuer/poptoken endpoint is a JWT, like this:
    ```
@@ -134,9 +135,9 @@ Then, follow these steps:
    it.
 
    (Because the issuer is signing an assertion here, we might want to include
-   some logic in the issuer to verify the identify of the presenter.  For
-   example, verify an API key or verify a self-signed JWT. After the issuer
-   verifies the identity of the presenter, it can
+   some logic in the issuer to verify the identify of the presenter. For
+   example, the issuer might verify an API key or verify a self-signed
+   JWT. After the issuer verifies the credential of the presenter, it can
    generate a JWT. That is left as an exercise for the reader.)
 
    Store this JWT into a shell variable:
@@ -146,10 +147,9 @@ Then, follow these steps:
 
 2. Presenter creates a "signed nonce" with the key he possesses.
 
-   Remember, the presenter asserted possession of the key with the request
-   previously sent to the issuer in step 1. Now the presenter needs to sign
-   something, a nonce, with that private key.
-
+   The presenter now needs to sign something, a nonce, with the private key that
+   is mentioned in the `cnf` claim of the previously described POP Token.
+   
    Nonce implies "not more than once". It can be any byte stream that can be
    signed. For our purpose we can a minimal JSON payload as the unsigned nonce,
    and then wrap that into a signed JWT for the signed version of the nonce.
@@ -207,4 +207,4 @@ Then, follow these steps:
 
 ## Bugs
 
-There's no sequence diagram for this example.
+There's no sequence diagram depicting the message exchange in this example.
