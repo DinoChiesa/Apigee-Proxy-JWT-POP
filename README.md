@@ -18,7 +18,7 @@ In short, it's done this way:
 - the presenter to delivers to the recipient a public key, as well as a "nonce"
   signed with the corresponding private key.
 
-- The recipient extracts the public key, verifies the signature on the nonce, and
+- The recipient extracts the public key, uses that to verify the signature on the nonce, and
   then is assured that the presenter in fact holds the corresponding private
   key.
 
@@ -26,9 +26,9 @@ In this way, the presenter has "proved possession" of the private key.
 The key pair can then be used for future secure communications between the
 presenter and the recipient.
 
-There is a IETF RFC, 7800, that describes [Proof-of-Possession Key
+[IETF RFC 7800](https://tools.ietf.org/html/rfc7800) describes [Proof-of-Possession Key
 Semantics for JSON Web Tokens (JWTs)](https://tools.ietf.org/html/rfc7800).
-In other words, how JWT can be used to implement a POP exchange.
+In other words, how JWT can be used to implement a POP exchange among the three parties.
 
 
 ## POP in Apigee
@@ -40,15 +40,23 @@ the exchange: Presenter, Issuer, or Recipient.
 
 ## This Example
 
-In this example, I've shown Apigee acting as both the issuer and the
-recipient. I've used two ditinct proxy endpoints to separate those
-concerns. There's no need for Apigee to be both.
+In this example, Apigee acts as both the issuer and the
+recipient. I've used two distinct proxy endpoints to separate those
+concerns. (There's no need for Apigee to be both, and usually the Issuer and
+Recipient will be different actors.)
 
 Apigee could also act as the Presenter in a POP exchange. This example does not show that.
 
+## Screencast
+
+You can view a [screencast of this
+example](https://youtu.be/XtlHv_-l9qg) on Youtube:
+[![image](./img/screenshot-20191205-160016.png)](https://youtu.be/XtlHv_-l9qg)
+
+
 ## To use it
 
-To use this example, first deploy the proxy to any Apigee ORG + ENV.
+To try this example yourself, first deploy the proxy to any Apigee ORG + ENV.
 To do so you can use a command-line tool like [importAndDeploy](https://github.com/DinoChiesa/apigee-edge-js/blob/master/examples/importAndDeploy.js) or just
 manually zip up the apiproxy directory and use the Apigee UI to import the zip.
 
@@ -58,7 +66,7 @@ Then, follow these steps:
 
    ```
    ORG=myorg
-   env=test
+   env=myenv
    curl -i -X POST -H content-type:application/json \
        https://$ORG-$ENV.apigee.net/jwt-pop/issuer/poptoken?sub=subject \
        -d '{ "jku": "url-pointing-to-JWKS", "kid": "key-id"}'
@@ -193,3 +201,7 @@ Then, follow these steps:
    possession of the private key corresponding to the public key.  The recipient
    can then use the public key, for example for encrypting data (perhaps via
    JWE?), and be assured that the recipient can decrypt and read that data.
+
+## Bugs
+
+There's no sequence diagram for this example.
