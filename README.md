@@ -168,7 +168,10 @@ Then, follow these steps:
        "payloadclaims" : { "nonce" : "8b5df20b01249df6f6" }
      }'
    ```
-   The result is another JWT, containing a nonce claim. We use this entire JWT as the nonce.
+   (The number `8b5df20b01249df6f6` is unimportant. It just needs to be unique.)
+
+   The result from that call is another JWT, containing a nonce claim. We use
+   this entire JWT as the nonce.
 
    ```
    NONCE=eyJraWQiOiI5ZTBjN2I3NCIsI...
